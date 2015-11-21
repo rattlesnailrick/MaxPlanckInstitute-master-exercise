@@ -29,14 +29,14 @@ def extract_beta_binomial_parameters(group):
     latest_t = group[12:16]
 
     # Remove samples of one day when m or t is inf
-    prev_m = prev_m[prev_m != "inf"]
     prev_t = prev_t[prev_m != "inf"]
+    prev_m = prev_m[prev_m != "inf"]
 
     prev_m = prev_m[prev_t != "inf"]
     prev_t = prev_t[prev_t != "inf"]
 
-    latest_m = latest_m[latest_m != "inf"]
     latest_t = latest_t[latest_m != "inf"]
+    latest_m = latest_m[latest_m != "inf"]
 
     latest_m = latest_m[latest_t != "inf"]
     latest_t = latest_t[latest_t != "inf"]
