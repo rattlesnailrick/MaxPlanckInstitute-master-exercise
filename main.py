@@ -42,10 +42,33 @@ def extract_beta_binomial_parameters(group):
     latest_t = latest_t[latest_t != "inf"]
 
     # Remove empty cells and convert to float
-    prev_m = prev_m[prev_m != ""].astype(float)
-    prev_t = prev_t[prev_t != ""].astype(float)
-    latest_m = latest_m[latest_m != ""].astype(float)
-    latest_t = latest_t[latest_t != ""].astype(float)
+    try:
+        prev_t = prev_t[prev_m != ""].astype(float)
+        prev_m = prev_m[prev_m != ""].astype(float)
+    except:
+        prev_m = 0
+        prev_t = 0
+
+    try:
+        prev_m = prev_m[prev_t != ""].astype(float)
+        prev_t = prev_t[prev_t != ""].astype(float)
+    except:
+        prev_m = 0
+        prev_t = 0
+
+    try:
+        latest_t = latest_t[latest_m != ""].astype(float)
+        latest_m = latest_m[latest_m != ""].astype(float)
+    except:
+        latest_t = 0
+        latest_m = 0
+
+    try:
+        latest_m = latest_m[latest_t != ""].astype(float)
+        latest_t = latest_t[latest_t != ""].astype(float)
+    except:
+        latest_t = 0
+        latest_m = 0
 
     # Aggregate all samples
     prev_m = np.sum(prev_m)
