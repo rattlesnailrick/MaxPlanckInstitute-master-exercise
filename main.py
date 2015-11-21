@@ -47,17 +47,28 @@ def extract_beta_binomial_parameters(group):
     latest_m = latest_m[latest_m != ""].astype(float)
     latest_t = latest_t[latest_t != ""].astype(float)
 
+    b = np.zeros((4))
+    a = np.zeros((4))
+    k = np.zeros((4))
+    n = np.zeros((4))
+
+    for i in range(4):
+        b[i] = int(prev_t[i] - prev_m[i])
+        n[i] = int(np.sum(latest_t[:] + latest_m[:]))
+        k[i] = int(np.sum(latest_m[:]))
+        a[i] = int(prev_m[i])
+
     # Aggregate all samples
-    prev_m = np.sum(prev_m)
-    prev_t = np.sum(prev_t)
-    latest_m = np.sum(latest_m)
-    latest_t = np.sum(latest_t)
+    #prev_m = np.sum(prev_m)
+    #prev_t = np.sum(prev_t)
+    #latest_m = np.sum(latest_m)
+    #latest_t = np.sum(latest_t)
 
     # Calculate Beta Binom Parameters and convert to int
-    b = int(prev_t - prev_m)
-    n = int(latest_t + latest_m)
-    k = int(latest_m)
-    a = int(prev_m)
+    #b = int(prev_t - prev_m)
+    #n = int(latest_t + latest_m)
+    #k = int(latest_m)
+    #a = int(prev_m)
 
     return k, n, a, b
 
@@ -67,9 +78,16 @@ def cdf_beta_binom(k, n, a, b):
         bb_mean = n * a / (a + b)
 
         cdf = 0
+        bb_function = []
         for i in range(int(k)):
             cdf += gamma_func_expansion_bb(i, n, a, b)
+            bb_function.append((i, gamma_func_expansion_bb(i, n, a, b)))
+        bb_function = np.array(bb_function)
         cdf = min(cdf, 1.)
+
+        pl.xlabel("Parameter k")
+        pl.ylabel("beta binomial distribution")
+        pl.plot(bb_function[:,0], bb_function[:,1])
 
         if bb_mean < int(k):
             probability = 1 - cdf
@@ -95,14 +113,16 @@ def main():
     data = data[1:, :]
 
     analyzed_data = data
-    # analyzed_data = data[::10]
+    #analyzed_data = data[::10]
     probabilities = []
     standard_deviations = []
 
     for row in analyzed_data:
         k, n, a, b = extract_beta_binomial_parameters(row)
-
-        probability, stdevs = cdf_beta_binom(k, n, a, b)
+        for i in range(4):
+            probability, stdevs = cdf_beta_binom(k[i], n[i], a[i], b[i])
+        pl.legend(range(4))
+        pl.show()
         probabilities.append(probability)
         standard_deviations.append(stdevs)
 
@@ -115,8 +135,8 @@ def main():
     results = results[results[:, 1].argsort()[::-1]]
     print results
 
-    # savefile = "C:/Users/Hendrik/Downloads/exercise-master/exercise-master/results.csv"
-    # np.savetxt(savefile, results, delimiter= ";")
+    save_file = "C:/Users/Hendrik/Downloads/exercise-master/exercise-master/results.csv"
+    np.savetxt(save_file, results, delimiter= ";")
 
     x = results[:, 1][results[:, 1] > 0]
     pl.plot(range(len(x)), x)
