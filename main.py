@@ -95,7 +95,7 @@ def main():
     data = data[1:, :]
 
     analyzed_data = data
-    # analyzed_data = data[::10]
+    #analyzed_data = data[::10]
     probabilities = []
     standard_deviations = []
 
@@ -119,10 +119,15 @@ def main():
     # np.savetxt(savefile, results, delimiter= ";")
 
     x = results[:, 1][results[:, 1] > 0]
+    pl.xlabel("Samples (sorted)")
+    pl.ylabel("Probability")
     pl.plot(range(len(x)), x)
     pl.yscale("log")
 
     pl.figure()
+    pl.title("Histogram: Standard deviations")
+    pl.ylabel("Count")
+    pl.xlabel("Standard deviations")
     x = standard_deviations[standard_deviations > 0]
     pl.hist(x, bins=math.sqrt(len(x)))
     pl.show()
