@@ -88,7 +88,9 @@ def extract_beta_binomial_parameters(group):
 
 
 def cdf_beta_binom(k, n, a, b):
-    if k > 0 and n > 0 and a > 0 and b > 0:
+    if n > 0 and b > 0:
+        a += 1
+        b += 1
         bb_mean = n * a / (a + b)
 
         cdf = 0
