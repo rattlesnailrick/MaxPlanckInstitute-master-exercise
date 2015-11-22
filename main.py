@@ -17,9 +17,11 @@ def gamma_func_expansion_bb(x, n, a, b):
 
 def extract_beta_binomial_parameters(group):
     # This function
-    # * requires a "group" consisting of 16 samples, split into previous and latest measurement and then
+    # * requires a "group" consisting of 16 samples, split
+    # into previous and latest measurement and then
     # divided into total and maligne isoforms.
-    # * aggregates the measurements of day 1 to 4 to one sum (assuming the persons genes have not changed).
+    # * aggregates the measurements of day 1 to 4 to one sum
+    # (assuming the persons genes have not changed).
     # * removes empty and/or infinite entries.
     # * converts the input into the beta binomial parameters k, n, a and b.
 
