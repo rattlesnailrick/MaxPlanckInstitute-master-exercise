@@ -53,22 +53,11 @@ def extract_beta_binomial_parameters(group):
     n = np.zeros((4))
 
     for i in range(4):
-        b[i] = int(prev_t[i] - prev_m[i])
-        n[i] = int(np.sum(latest_t[:]))
-        k[i] = int(np.sum(latest_m[:]))
-        a[i] = int(prev_m[i])
-
-    # Aggregate all samples
-    #prev_m = np.sum(prev_m)
-    #prev_t = np.sum(prev_t)
-    #latest_m = np.sum(latest_m)
-    #latest_t = np.sum(latest_t)
-
-    # Calculate Beta Binom Parameters and convert to int
-    #b = int(prev_t - prev_m)
-    #n = int(latest_t + latest_m)
-    #k = int(latest_m)
-    #a = int(prev_m)
+        for j in range(4):
+            a[i] = int(prev_m[i])
+            b[i] = int(prev_t[i] - prev_m[i])
+            n[j] = int(latest_t[j])
+            k[j] = int(latest_m[j])
 
     return k, n, a, b
 
@@ -114,18 +103,22 @@ def main():
 
     analyzed_data = data
     #analyzed_data = data[::10]
-    probabilities = []
-    standard_deviations = []
+    probability = np.zeros((4,4))
+    stdevs = np.zeros((4,4))
 
     for row in analyzed_data:
         k, n, a, b = extract_beta_binomial_parameters(row)
+        print np.reshape(row, [4,4])
         for i in range(4):
-            probability, stdevs = cdf_beta_binom(k[i], n[i], a[i], b[i])
-        pl.legend(range(4))
-        pl.show()
-        probabilities.append(probability)
-        standard_deviations.append(stdevs)
+            for j in range(4):
+                probability[i,j], stdevs[i,j] = cdf_beta_binom(k[i], n[i], a[j], b[j])
+            pl.legend(range(4))
+            pl.show()
+        print probability
+        #probabilities.append(probability)
+        #standard_deviations.append(stdevs)
 
+    '''
     probabilities = np.array(probabilities, dtype=float)
     standard_deviations = np.array(standard_deviations, dtype=float)
     person_id = np.arange(len(probabilities))
@@ -146,6 +139,7 @@ def main():
     x = standard_deviations[standard_deviations > 0]
     pl.hist(x, bins=math.sqrt(len(x)))
     pl.show()
+    '''
 
 
 if __name__ == "__main__":
