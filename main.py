@@ -54,7 +54,7 @@ def extract_beta_binomial_parameters(group):
 
     for i in range(4):
         b[i] = int(prev_t[i] - prev_m[i])
-        n[i] = int(np.sum(latest_t[:] + latest_m[:]))
+        n[i] = int(np.sum(latest_t[:]))
         k[i] = int(np.sum(latest_m[:]))
         a[i] = int(prev_m[i])
 
